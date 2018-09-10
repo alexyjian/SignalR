@@ -130,10 +130,14 @@ public class HubConnectionTest {
         assertEquals(expectedHanshakeRequest, message);
 
         mockTransport.receiveMessage("{}" + RECORD_SEPARATOR);
-        mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+        try {
+            mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+        } catch (Exception ex) {
+            assertEquals("There are no callbacks registered for the method 'inc'.", ex.getMessage());
+        }
 
         // Confirming that the handler was removed.
-        assertEquals(0, value.get(), 0);
+        assertEquals(0.0, value.get(), 0);
     }
 
     @Test
@@ -162,7 +166,11 @@ public class HubConnectionTest {
 
         hubConnection.remove("inc");
 
-        mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+        try {
+            mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+        } catch (Exception ex) {
+            assertEquals("There are no callbacks registered for the method 'inc'.", ex.getMessage());
+        }
 
         // Confirm that another invocation doesn't change anything because the handlers have been removed.
         assertEquals(3, value.get(), 0);
@@ -192,7 +200,12 @@ public class HubConnectionTest {
         assertEquals(1, value.get(), 0);
 
         subscription.unsubscribe();
-        mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+        try {
+            mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+        } catch (Exception ex) {
+            assertEquals("There are no callbacks registered for the method 'inc'.", ex.getMessage());
+        }
+
         assertEquals(1, value.get(), 0);
     }
 
@@ -221,7 +234,12 @@ public class HubConnectionTest {
 
         subscription.unsubscribe();
         subscription.unsubscribe();
-        mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+        try {
+            mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+        } catch (Exception ex) {
+            assertEquals("There are no callbacks registered for the method 'inc'.", ex.getMessage());
+        }
+
         assertEquals(1, value.get(), 0);
     }
 
@@ -269,7 +287,13 @@ public class HubConnectionTest {
 
         hubConnection.start();
         mockTransport.receiveMessage("{}" + RECORD_SEPARATOR);
-        mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+
+        try {
+            mockTransport.receiveMessage("{\"type\":1,\"target\":\"inc\",\"arguments\":[]}" + RECORD_SEPARATOR);
+        } catch (Exception ex) {
+            assertEquals("There are no callbacks registered for the method 'inc'.", ex.getMessage());
+        }
+
         // Confirming that the handler was removed.
         assertEquals(0, value.get(), 0);
     }
