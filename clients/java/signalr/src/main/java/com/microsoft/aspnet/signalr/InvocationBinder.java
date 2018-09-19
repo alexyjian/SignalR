@@ -3,6 +3,9 @@
 
 package com.microsoft.aspnet.signalr;
 
-interface OnReceiveCallBack {
-    void invoke(String message) throws Exception;
+import java.util.List;
+
+interface InvocationBinder {
+    Class<?> getReturnType(String invocationId);
+    List<Class<?>> getParameterTypes(String methodName) throws Exception;
 }
